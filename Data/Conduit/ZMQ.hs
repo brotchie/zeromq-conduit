@@ -10,6 +10,7 @@ module Data.Conduit.ZMQ
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Internal as BS
 import Data.Conduit
+import Data.Conduit.Util
 import Prelude hiding (init)
 import System.ZMQ
 
@@ -43,17 +44,17 @@ mkSocket ctx so =
                return sock
 
 -- | A 'Source' for a 'Socket'
-zmqSource :: (ResourceIO m, SType st) => Context
+zmqSource :: (MonadResource m, SType st) => Context
                          -> SocketOpts st
                          -> Source m BS.ByteString
 zmqSource ctx so = sourceIO
           (mkSocket ctx so)
           close
-          (\sock -> liftIO $ do
-              fmap Open $ receive sock [])
+          (\sock -> liftIO $
+              fmap IOOpen $ receive sock [])
 
 
-zmqSink :: (ResourceIO m, SType st) => Context
+zmqSink :: (MonadResource m, SType st) => Context
                        -> SocketOpts st
                        -> Sink BS.ByteString m ()
 zmqSink ctx so = sinkIO
@@ -61,6 +62,6 @@ zmqSink ctx so = sinkIO
          close
          (\sock msg -> do
            liftIO $ send sock msg [] 
-           return Processing)
+           return IOProcessing)
          (\_ -> return ())
 

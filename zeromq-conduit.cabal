@@ -51,7 +51,7 @@ Library
   Exposed-modules:   Data.Conduit.ZMQ  
   
   -- Packages needed in order to build this package.
-  Build-depends:     base, bytestring, transformers, zeromq-haskell >= 0.8.2, conduit       
+  Build-depends:     base, bytestring, transformers, zeromq-haskell >= 0.8.2, conduit >= 0.5.0
   
   -- Modules not exported by this package.
   -- Other-modules:       
@@ -65,7 +65,7 @@ test-suite test
     type: exitcode-stdio-1.0
     cpp-options:   -DTEST
     build-depends:   zeromq-conduit
-                   , conduit
+                   , conduit >= 0.5.0
                    , zeromq-haskell >= 0.8.2 
                    , cereal
                    , base
